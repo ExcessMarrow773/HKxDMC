@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://b7eq0net3g2v6"]
+
+[ext_resource type="Script" uid="uid://csk5et40db13i" path="res://Scenes/death_plane.gd" id="1_muqfy"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_bxm1o"]
+
+[node name="Death Plane" type="Area2D"]
+script = ExtResource("1_muqfy")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("WorldBoundaryShape2D_bxm1o")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
