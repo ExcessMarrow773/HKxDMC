@@ -19,7 +19,7 @@ var game_paused = false
 var animation_finished = null
 
 func _ready() -> void:
-	pass
+	randomize()
 
 func flip(direction):
 	if direction == -1:
@@ -29,7 +29,7 @@ func flip(direction):
 
 func _physics_process(delta: float) -> void:
 	var did_move = (lastX == position.x) and (lastY == position.y)
-	var direction := Input.get_axis("left", "right")
+	var direction := randi() % 2 == 0 
 	# Add the gravity.
 	if not is_on_floor() and not game_paused:
 		velocity += get_gravity() * delta
@@ -54,6 +54,7 @@ func _physics_process(delta: float) -> void:
 		death('respawn')
 
 	# Get the input direction and handle the movement/deceleration.
+	$Camera2D/Label.text = "on ladder: " + str(on_ladder) + "\ndirection: " + str(direction)
 	if direction and not game_paused: # Adjust the threshold (0.1) as needed:
 		$AnimatedSprite2D.flip_h = flip(direction)
 		

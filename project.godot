@@ -13,12 +13,21 @@ config_version=5
 config/name="tets"
 config/tags=PackedStringArray("2d", "gamejam", "on.github")
 run/main_scene="uid://dwb4pgciirroi"
+run/enable_alt_space_menu=true
 config/features=PackedStringArray("4.5", "Forward Plus")
 
 [editor]
 
 version_control/plugin_name="GitPlugin"
 version_control/autoload_on_startup=true
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/GodotTogether/plugin.cfg")
+
+[gui]
+
+timers/enable_alt_space_menu=false
 
 [input]
 
