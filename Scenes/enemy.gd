@@ -29,7 +29,12 @@ func flip(direction):
 
 func _physics_process(delta: float) -> void:
 	var did_move = (lastX == position.x) and (lastY == position.y)
-	var direction := randi() % 2 == 0 
+	var direction := randi() % 2
+	
+	if Input.is_action_pressed("pause"):
+		game_paused = not game_paused
+	
+	print(direction)
 	# Add the gravity.
 	if not is_on_floor() and not game_paused:
 		velocity += get_gravity() * delta
