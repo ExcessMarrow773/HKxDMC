@@ -36,42 +36,31 @@ func _physics_process(delta: float) -> void:
 		var next_path_position = navigation_agent.get_next_path_position()
 		var direction := global_position.direction_to(next_path_position)
 		
-		if player.position.x == position.x or player.position.y < position.y-50:
-			pass
-		
-		if Input.is_action_pressed("pause"):
-			game_paused = not game_paused
-		
 
-		# Add the gravity.
-		if not is_on_floor() and not game_paused:
-			velocity += get_gravity() * delta
-
+		velocity += get_gravity() * delta
+		move_and_slide()
+		print(direction)
 		# Handles respawn/ restart
 		if Input.is_action_just_pressed("restart"):
 			velocity = Vector2(0, 0)
-			death('respawn')
+			restart()
 
 		# Get the input direction and handle the movement/deceleration.
-		if velocity and not game_paused: # Adjust the threshold (0.1) as needed:
-			#$AnimatedSprite2D.flip_h = flip(direction)
+		if not game_paused: # Adjust the threshold (0.1) as needed:
 			
 			velocity = direction * SPEED
-			
 			
 			if not game_paused:
 				anim.pause()
 				anim.play("Walk")
 		
 		else:
-			if not game_paused: velocity.x = move_toward(velocity.x, 0, SPEED)
 			if not game_paused:
 				anim.pause()
 				anim.play("Idle")
 
-		if not game_paused and navigation_agent.is_navigation_finished():
-			move_and_slide()
-			return
+		move_and_slide()
+		
 		if Input.is_action_just_pressed("quit"): get_tree().quit()
 	else:
 		# Stop enemy movement if pathfinding is disabled
@@ -79,27 +68,8 @@ func _physics_process(delta: float) -> void:
 		anim.pause()
 		anim.play("Idle")
 	
-func death(death_message):
-	print(r"Died to " + str(death_message) + " :(")
-	
-	if death_message == "void":
-		await get_tree().create_timer(0.75).timeout
-
-	elif death_message == "lava":
-		anim.pause()
-		anim.play("Death")
-		
-		game_paused = true
-		await get_tree().create_timer(1.25).timeout
+func restart():
 	get_tree().reload_current_scene()
-
-func _on_death_plane_body_entered(_body: CharacterBody2D) -> void:
-	death("void")
-
-# Lava func
-
-func _entered_lava(_body: Node2D) -> void:
-	death("lava")
 
 func _on_animated_sprite_2d_animation_finished(anim_name) -> void:
 	print("finished animation")
