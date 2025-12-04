@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://b7eq0net3g2v6"]
 
-[ext_resource type="Script" uid="uid://csk5et40db13i" path="res://Scenes/death_plane.gd" id="1_muqfy"]
+[ext_resource type="Script" uid="uid://csk5et40db13i" path="res://Scripts/death_plane.gd" id="1_muqfy"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_bxm1o"]
 
