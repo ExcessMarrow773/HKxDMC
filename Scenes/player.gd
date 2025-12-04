@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
-@onready var death_plane: Area2D = $"../Death Plane"
+#@onready var death_plane: Area2D = $"../Death Plane"
 
 @export var MAX_SPEED := 300
 @export var JUMP_VELOCITY := -350
@@ -52,6 +52,9 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("restart"):
 		velocity = Vector2(0, 0)
 		death('respawn')
+		
+	if Input.is_action_just_pressed("custom"):
+		$"..".enable_enemy_pathfinding = not $"..".enable_enemy_pathfinding
 
 	# Get the input direction and handle the movement/deceleration.
 	if direction and not game_paused: # Adjust the threshold (0.1) as needed:

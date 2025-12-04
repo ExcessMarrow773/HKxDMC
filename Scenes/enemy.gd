@@ -1,25 +1,28 @@
 extends CharacterBody2D
 
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
-@onready var death_plane: Area2D = $"../Death Plane"
+#@onready var death_plane: Area2D = $"../Death Plane"
+@onready var player: CharacterBody2D = $"../Player"
+@onready var world: Node2D = get_tree().root.get_node("World")
+@onready var navigation_agent = $NavigationAgent2D
 
-@export var MAX_SPEED := 300
+@export var MAX_SPEED := 150
 @export var JUMP_VELOCITY := -350
 
 
 
-var SPEED = 0
-var ACCELERATION = 500
+var SPEED = 100
+var ACCELERATION = 100
 var CLIMB_SPEED = 200.0
 var lastX = 0
 var lastY = 0
-var on_ladder = false
 var climbing: bool
 var game_paused = false
 var animation_finished = null
 
 func _ready() -> void:
 	randomize()
+	
 
 func flip(direction):
 	if direction == -1:
@@ -28,63 +31,53 @@ func flip(direction):
 		return false
 
 func _physics_process(delta: float) -> void:
-	var did_move = (lastX == position.x) and (lastY == position.y)
-	var direction := randi() % 2
-	
-	if Input.is_action_pressed("pause"):
-		game_paused = not game_paused
-	
-	print(direction)
-	# Add the gravity.
-	if not is_on_floor() and not game_paused:
-		velocity += get_gravity() * delta
-
-	if on_ladder:
-		var vert_direction := Input.get_axis("jump" ,"down")
-		if vert_direction:
-			velocity.y = vert_direction * CLIMB_SPEED
-			climbing = not is_on_floor()
-		else:
-			velocity.y = move_toward(velocity.y, 0, CLIMB_SPEED)
-			if is_on_floor(): climbing = false
+	navigation_agent.target_position = player.position
+	if world.enable_enemy_pathfinding:
+		var next_path_position = navigation_agent.get_next_path_position()
+		var direction := global_position.direction_to(next_path_position)
+		
+		if player.position.x == position.x or player.position.y < position.y-50:
+			pass
+		
+		if Input.is_action_pressed("pause"):
+			game_paused = not game_paused
 		
 
-	# Handle jump.
-	if Input.is_action_just_pressed("jump") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
+		# Add the gravity.
+		if not is_on_floor() and not game_paused:
+			velocity += get_gravity() * delta
 
-	# Handles respawn/ restart
-	if Input.is_action_just_pressed("restart"):
-		velocity = Vector2(0, 0)
-		death('respawn')
+		# Handles respawn/ restart
+		if Input.is_action_just_pressed("restart"):
+			velocity = Vector2(0, 0)
+			death('respawn')
 
-	# Get the input direction and handle the movement/deceleration.
-	$Camera2D/Label.text = "on ladder: " + str(on_ladder) + "\ndirection: " + str(direction)
-	if direction and not game_paused: # Adjust the threshold (0.1) as needed:
-		$AnimatedSprite2D.flip_h = flip(direction)
-		
-		if did_move:
-			SPEED = min(SPEED + ACCELERATION * delta, MAX_SPEED)
+		# Get the input direction and handle the movement/deceleration.
+		if velocity and not game_paused: # Adjust the threshold (0.1) as needed:
+			#$AnimatedSprite2D.flip_h = flip(direction)
 			
-		velocity.x = direction * SPEED
+			velocity = direction * SPEED
+			
+			
+			if not game_paused:
+				anim.pause()
+				anim.play("Walk")
 		
-		if on_ladder: climbing = not is_on_floor()
-		else: climbing = false
-		if not game_paused:
-			anim.pause()
-			anim.play("Walk")
-		
+		else:
+			if not game_paused: velocity.x = move_toward(velocity.x, 0, SPEED)
+			if not game_paused:
+				anim.pause()
+				anim.play("Idle")
+
+		if not game_paused and navigation_agent.is_navigation_finished():
+			move_and_slide()
+			return
+		if Input.is_action_just_pressed("quit"): get_tree().quit()
 	else:
-		if not game_paused: velocity.x = move_toward(velocity.x, 0, SPEED)
-		SPEED = 0
-		if not game_paused:
-			anim.pause()
-			anim.play("Idle")
-	
-	if not game_paused: move_and_slide()
-	lastY = position.y
-	lastX = position.x
-	if Input.is_action_just_pressed("quit"): get_tree().quit()
+		# Stop enemy movement if pathfinding is disabled
+		velocity = Vector2.ZERO
+		anim.pause()
+		anim.play("Idle")
 	
 func death(death_message):
 	print(r"Died to " + str(death_message) + " :(")
@@ -107,14 +100,6 @@ func _on_death_plane_body_entered(_body: CharacterBody2D) -> void:
 
 func _entered_lava(_body: Node2D) -> void:
 	death("lava")
-
-func _on_area_2d_body_exited(_body: Node2D) -> void:
-	print("exited a ladder")
-	on_ladder = false
-
-func _on_area_2d_body_entered(_body: Node2D) -> void:
-	print("entered a ladder")
-	on_ladder = true
 
 func _on_animated_sprite_2d_animation_finished(anim_name) -> void:
 	print("finished animation")
