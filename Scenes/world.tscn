@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://dwb4pgciirroi"]
+[gd_scene load_steps=8 format=3 uid="uid://dwb4pgciirroi"]
 
 [ext_resource type="Script" uid="uid://bf1fqgurx6yqt" path="res://Scenes/world.gd" id="1_fo5ed"]
 [ext_resource type="PackedScene" uid="uid://dr06xrus2a3tb" path="res://Scenes/player.tscn" id="1_go701"]
+[ext_resource type="Script" uid="uid://ddm5rdh2xiijt" path="res://Scenes/enemy.gd" id="4_8j60k"]
 [ext_resource type="PackedScene" uid="uid://cjg5onaqsierg" path="res://Scenes/enemy.tscn" id="5_fo5ed"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_5a7ea"]
@@ -9,13 +10,19 @@ font_size = 10
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5a7ea"]
 
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_8j60k"]
+vertices = PackedVector2Array(246.00781, 29.851563, -117.97656, 30.0625, -118.03125, -53.929688, 245.96094, -54.140625)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-128.0365, -63.92699, -127.97718, 40.073, 256.0228, 39.853985, 255.96349, -64.14601)])
+
 [node name="World" type="Node2D"]
 top_level = true
+rotation = 0.00057036255
 script = ExtResource("1_fo5ed")
 
 [node name="Player" parent="." instance=ExtResource("1_go701")]
 texture_repeat = 2
-position = Vector2(-1, -29)
+position = Vector2(7.9817476, -32.00456)
 slide_on_ceiling = false
 floor_stop_on_slope = false
 floor_constant_speed = true
@@ -37,6 +44,10 @@ metadata/_edit_use_anchors_ = true
 
 [node name="Enemy" parent="." instance=ExtResource("5_fo5ed")]
 position = Vector2(50, -22)
+script = ExtResource("4_8j60k")
+MAX_SPEED = 150
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="Enemy"]
 
 [node name="AnimatableBody2D" type="AnimatableBody2D" parent="."]
 physics_material_override = SubResource("PhysicsMaterial_5a7ea")
@@ -44,4 +55,7 @@ physics_material_override = SubResource("PhysicsMaterial_5a7ea")
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="AnimatableBody2D"]
 position = Vector2(83.825195, 34.898376)
 scale = Vector2(24.650492, 26.679688)
-polygon = PackedVector2Array(0.047658443, 0.04129076, -8.593143, 0.04129076, -8.593143, -1.3080504, 6.98464, -1.3080504, 7.0252075, 0.0038090944)
+polygon = PackedVector2Array(-8.592216, 0.19395387, -8.593143, -1.3080504, 6.98464, -1.3080504, 6.9855633, 0.18574464)
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+navigation_polygon = SubResource("NavigationPolygon_8j60k")
