@@ -1,6 +1,6 @@
 [gd_scene load_steps=41 format=3 uid="uid://cjg5onaqsierg"]
 
-[ext_resource type="Script" uid="uid://cd57oyvxsk8l6" path="res://Scenes/player.gd" id="1_onrkg"]
+[ext_resource type="Script" uid="uid://ddm5rdh2xiijt" path="res://Scripts/enemy.gd" id="1_1f0kj"]
 [ext_resource type="Texture2D" uid="uid://j736qbs50wx3" path="res://Assets/sprites/knight.png" id="2_i3pqv"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cvnsp"]
@@ -287,7 +287,9 @@ animations = [{
 size = Vector2(12, 15)
 
 [node name="Enemy" type="CharacterBody2D"]
-script = ExtResource("1_onrkg")
+floor_stop_on_slope = false
+floor_constant_speed = true
+script = ExtResource("1_1f0kj")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_qpa8y")
@@ -298,29 +300,4 @@ speed_scale = 1.2
 position = Vector2(0, 4.5)
 shape = SubResource("RectangleShape2D_cvnsp")
 
-[node name="Area2D" type="Area2D" parent="."]
-visible = false
-collision_layer = 2
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-light_mask = 2
-visibility_layer = 2
-position = Vector2(0, 4.5)
-shape = SubResource("RectangleShape2D_cvnsp")
-
-[node name="LavaArea2d" type="Area2D" parent="."]
-collision_layer = 4
-collision_mask = 4
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="LavaArea2d"]
-visible = false
-light_mask = 2
-visibility_layer = 2
-position = Vector2(0, 4.5)
-shape = SubResource("RectangleShape2D_cvnsp")
-
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
-[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
-[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]
-[connection signal="body_entered" from="LavaArea2d" to="." method="_entered_lava"]
