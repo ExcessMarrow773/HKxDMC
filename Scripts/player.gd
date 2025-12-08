@@ -3,7 +3,7 @@ extends CharacterBody2D
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 #@onready var death_plane: Area2D = $"../Death Plane"
 
-@export var MAX_SPEED := 300
+@export var MAX_SPEED := 200
 @export var JUMP_VELOCITY := -350
 
 

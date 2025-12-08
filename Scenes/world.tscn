@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://dwb4pgciirroi"]
 
-[ext_resource type="Script" path="res://Scenes/world.gd" id="1_fo5ed"]
+[ext_resource type="Script" uid="uid://bf1fqgurx6yqt" path="res://Scripts/world.gd" id="1_fo5ed"]
 [ext_resource type="PackedScene" uid="uid://dr06xrus2a3tb" path="res://Scenes/player.tscn" id="1_go701"]
 [ext_resource type="PackedScene" uid="uid://cjg5onaqsierg" path="res://Scenes/enemy.tscn" id="5_fo5ed"]
 
@@ -21,7 +21,7 @@ script = ExtResource("1_fo5ed")
 
 [node name="Player" parent="." instance=ExtResource("1_go701")]
 texture_repeat = 2
-position = Vector2(7.9817476, -32.00456)
+position = Vector2(192.00012, -103.8905)
 slide_on_ceiling = false
 floor_stop_on_slope = false
 floor_constant_speed = true
@@ -44,17 +44,19 @@ label_settings = SubResource("LabelSettings_5a7ea")
 metadata/_edit_use_anchors_ = true
 
 [node name="Enemy" parent="." instance=ExtResource("5_fo5ed")]
-position = Vector2(50, -22)
+position = Vector2(234.01837, -93.88595)
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="Enemy"]
 
 [node name="AnimatableBody2D" type="AnimatableBody2D" parent="."]
+position = Vector2(184.01837, -71.88595)
 physics_material_override = SubResource("PhysicsMaterial_5a7ea")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="AnimatableBody2D"]
 position = Vector2(83.825195, 34.898376)
 scale = Vector2(24.650492, 26.679688)
-polygon = PackedVector2Array(-8.592216, 0.19395387, -8.593142, -1.305314, 6.98464, -1.3080504, 6.9855633, 0.18574464)
+polygon = PackedVector2Array(-8.592216, 0.19395387, -8.593142, -1.305314, 17.691948, -1.3273752, 17.692875, 0.17189264)
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+position = Vector2(184.01837, -71.88595)
 navigation_polygon = SubResource("NavigationPolygon_8j60k")

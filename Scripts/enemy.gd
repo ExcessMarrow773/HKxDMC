@@ -1,6 +1,5 @@
 extends CharacterBody2D
 
-
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 @onready var player: CharacterBody2D = $"../Player"
 @onready var world: Node2D = get_tree().root.get_node("World")
@@ -8,9 +7,7 @@ extends CharacterBody2D
 @onready var scripts = "res://Scripts/contrib.gd"
 
 @export var MAX_SPEED := 150
-@export var JUMP_VELOCITY := -350
-
-
+@export var JUMP_VELOCITY := -300
 
 var SPEED = 100
 var ACCELERATION = 100
@@ -23,7 +20,6 @@ var animation_finished = null
 
 func _ready() -> void:
 	randomize()
-	
 
 func flip(direction):
 	if direction.x < 0:
@@ -36,35 +32,26 @@ func _physics_process(delta: float) -> void:
 	var next_path_position = navigation_agent.get_next_path_position()
 	var direction := global_position.direction_to(next_path_position)
 	
-	if world.enable_enemy_pathfinding:
+	
+	move_and_slide()
+	print(direction, velocity.y)
+	
+	if not game_paused:
+		velocity.x = (direction.x * SPEED)
 		velocity += get_gravity() * delta
-		move_and_slide()
-		print(direction)
-		
-		if not game_paused:
-			velocity.x = (direction.x * SPEED)
-			
-			anim.pause()
-			anim.play("Walk")
-			$AnimatedSprite2D.flip_h = flip(direction)
-		
-		else:
-			if not game_paused:
-				anim.pause()
-				anim.play("Idle")
-
-		move_and_slide()
-		
-		
-		## KEYBINDS
-		if Input.is_action_just_pressed("restart"):
-			velocity = Vector2(0, 0)
-			scripts.restart()
-			
-		if Input.is_action_just_pressed("quit"): get_tree().quit()
-		
-	else:
-		# Stop enemy movement if pathfinding is disabled
-		velocity = Vector2.ZERO
 		anim.pause()
-		anim.play("Idle")
+		anim.play("Walk")
+		$AnimatedSprite2D.flip_h = flip(direction)
+		
+		if direction.y < -0.5 and is_on_floor():
+			velocity.y = JUMP_VELOCITY
+			
+		if velocity.x == 0.0:
+			anim.pause()
+			anim.play("Idle")
+	
+	if Input.is_action_just_pressed("restart"):
+		velocity = Vector2(0, 0)
+		scripts.restart()
+		
+	if Input.is_action_just_pressed("quit"): get_tree().quit()
