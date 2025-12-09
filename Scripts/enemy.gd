@@ -20,6 +20,7 @@ var animation_finished = null
 
 func _ready() -> void:
 	randomize()
+	queue_free()
 
 func flip(direction):
 	if direction.x < 0:
