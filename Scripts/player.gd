@@ -16,6 +16,7 @@ var lastY = 0
 var game_paused = false
 var animation_finished = null
 var isDashing := false
+var canDash := false
 var dash_dist = 450
 var dash_time_max = 0.1
 var dash_time = 0
@@ -42,11 +43,12 @@ func _physics_process(delta: float) -> void:
 		velocity.y = JUMP_VELOCITY
 	
 	# Handle dash.
-	if Input.is_action_just_pressed("dash") and dash_cooldown >= dash_cooldown_max and not isDashing:
+	if Input.is_action_just_pressed("dash") and dash_cooldown >= dash_cooldown_max and !isDashing and canDash:
 		isDashing = true
 		dash_cooldown = 0
 		dash_time = 0
 		velocity.y = 0
+		canDash = false
 	
 	if !isDashing and dash_cooldown < dash_cooldown_max:
 		dash_cooldown += delta
@@ -58,6 +60,9 @@ func _physics_process(delta: float) -> void:
 		dash_time += delta
 		if dash_time >= dash_time_max:
 			isDashing = false
+	
+	if is_on_floor() and !canDash:
+		canDash = true
 	
 	# Handles respawn/ restart
 	if Input.is_action_just_pressed("restart"):
@@ -92,6 +97,9 @@ func _physics_process(delta: float) -> void:
 	lastX = position.x
 	if Input.is_action_just_pressed("quit"): get_tree().quit()
 	
+	
+	
+# handles death
 func death(death_message):
 	print(r"Died to " + str(death_message) + " :(")
 	
