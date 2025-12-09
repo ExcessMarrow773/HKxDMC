@@ -11,9 +11,9 @@ font_size = 10
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5a7ea"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_8j60k"]
-vertices = PackedVector2Array(958.0078, 29.453125, -117.97656, 30.0625, -118.03125, -53.929688, 957.96094, -54.539063)
+vertices = PackedVector2Array(246.00781, 29.851563, -117.97656, 30.0625, -118.03125, -53.929688, 245.96094, -54.140625)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
-outlines = Array[PackedVector2Array]([PackedVector2Array(-128.0365, -63.92699, -127.97718, 40.073, 968.0227, 39.44789, 967.9634, -64.5521)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-128.0365, -63.92699, -127.97718, 40.073, 256.0228, 39.853985, 255.96349, -64.14601)])
 
 [node name="World" type="Node2D"]
 top_level = true
@@ -65,13 +65,8 @@ physics_material_override = SubResource("PhysicsMaterial_5a7ea")
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="AnimatableBody2D"]
 position = Vector2(83.825195, 34.898376)
 scale = Vector2(24.650492, 26.679688)
-polygon = PackedVector2Array(-10.866943, -0.7126179, -10.867313, -1.312325, 33.26973, -1.3355844, 33.2701, -0.7358773)
-
-[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="AnimatableBody2D"]
-position = Vector2(1768.5378, 1046.7725)
-scale = Vector2(607.6468, 711.8057)
-polygon = PackedVector2Array(-2.0943565, -1.5499651, -2.094304, -1.471292, -1.8573244, -1.4714074, -1.8573769, -1.5500805)
+polygon = PackedVector2Array(-8.592216, 0.19395387, -8.593142, -1.305314, 17.691948, -1.3273752, 17.692875, 0.17189264)
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
-position = Vector2(119.94066, -104.068436)
+position = Vector2(184.01837, -71.88595)
 navigation_polygon = SubResource("NavigationPolygon_8j60k")

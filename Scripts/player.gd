@@ -1,13 +1,14 @@
-extends CharacterBody2D
+class_name Player extends CharacterBody2D
 
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 #@onready var death_plane: Area2D = $"../Death Plane"
 
 @export var MAX_SPEED := 200
 @export var JUMP_VELOCITY := -350
+@export var MAX_HEALTH := 500
 
 
-
+var HEALTH = MAX_HEALTH
 var SPEED = 0
 var ACCELERATION = 500
 var CLIMB_SPEED = 200.0
@@ -18,6 +19,7 @@ var climbing: bool
 var game_paused = false
 var animation_finished = null
 
+@export var slash_attack: PackedScene
 var isDashing := false
 var dash_dist = 450
 var dash_time_max = 0.1
@@ -78,8 +80,8 @@ func _physics_process(delta: float) -> void:
 		death('respawn')
 		
 	if Input.is_action_just_pressed("custom"):
-		$"..".enable_enemy_pathfinding = not $"..".enable_enemy_pathfinding
-
+		var atk = slash_attack.instantiate()
+		add_child(atk)
 	# Get the input direction and handle the movement/deceleration.
 	if direction and not game_paused: # Adjust the threshold (0.1) as needed:
 		$AnimatedSprite2D.flip_h = flip(direction)
@@ -123,11 +125,6 @@ func death(death_message):
 
 func _on_death_plane_body_entered(_body: CharacterBody2D) -> void:
 	death("void")
-
-# Lava func
-
-func _entered_lava(_body: Node2D) -> void:
-	death("lava")
 
 func _on_area_2d_body_exited(_body: Node2D) -> void:
 	print("exited a ladder")
