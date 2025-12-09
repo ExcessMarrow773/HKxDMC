@@ -6,20 +6,15 @@ class_name Player extends CharacterBody2D
 @export var MAX_SPEED := 200
 @export var JUMP_VELOCITY := -350
 @export var MAX_HEALTH := 500
-
+@export var slash_attack: PackedScene
 
 var HEALTH = MAX_HEALTH
 var SPEED = 0
 var ACCELERATION = 500
-var CLIMB_SPEED = 200.0
 var lastX = 0
 var lastY = 0
-var on_ladder = false
-var climbing: bool
 var game_paused = false
 var animation_finished = null
-
-@export var slash_attack: PackedScene
 var isDashing := false
 var dash_dist = 450
 var dash_time_max = 0.1
@@ -41,16 +36,6 @@ func _physics_process(delta: float) -> void:
 	# Add the gravity.
 	if not is_on_floor() and not game_paused and not isDashing:
 		velocity += get_gravity() * delta
-
-	if on_ladder:
-		var vert_direction := Input.get_axis("jump" ,"down")
-		if vert_direction:
-			velocity.y = vert_direction * CLIMB_SPEED
-			climbing = not is_on_floor()
-		else:
-			velocity.y = move_toward(velocity.y, 0, CLIMB_SPEED)
-			if is_on_floor(): climbing = false
-		
 
 	# Handle jump.
 	if Input.is_action_just_pressed("jump") and is_on_floor() and !isDashing:
@@ -91,8 +76,6 @@ func _physics_process(delta: float) -> void:
 			
 		velocity.x = direction * SPEED
 		
-		if on_ladder: climbing = not is_on_floor()
-		else: climbing = false
 		if not game_paused:
 			anim.pause()
 			anim.play("Walk")
@@ -125,14 +108,6 @@ func death(death_message):
 
 func _on_death_plane_body_entered(_body: CharacterBody2D) -> void:
 	death("void")
-
-func _on_area_2d_body_exited(_body: Node2D) -> void:
-	print("exited a ladder")
-	on_ladder = false
-
-func _on_area_2d_body_entered(_body: Node2D) -> void:
-	print("entered a ladder")
-	on_ladder = true
 
 func _on_animated_sprite_2d_animation_finished(anim_name) -> void:
 	print("finished animation")
