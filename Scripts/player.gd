@@ -20,21 +20,26 @@ var game_paused = false
 var animation_finished = null
 
 @export var slash_attack: PackedScene
+var isDashing := false
+var dash_dist = 450
+var dash_time_max = 0.1
+var dash_time = 0
+var dash_cooldown_max = 0.4
+var dash_cooldown = 0.0
 
 func _ready() -> void:
 	pass
 
 func flip(direction):
-	if direction == -1:
-		return true
-	else:
-		return false
+	if direction == -1: return true
+	else: return false
 
 func _physics_process(delta: float) -> void:
 	var did_move = (lastX == position.x) and (lastY == position.y)
 	var direction := Input.get_axis("left", "right")
+	if isDashing: direction = 0.0
 	# Add the gravity.
-	if not is_on_floor() and not game_paused:
+	if not is_on_floor() and not game_paused and not isDashing:
 		velocity += get_gravity() * delta
 
 	if on_ladder:
@@ -48,9 +53,27 @@ func _physics_process(delta: float) -> void:
 		
 
 	# Handle jump.
-	if Input.is_action_just_pressed("jump") and is_on_floor():
+	if Input.is_action_just_pressed("jump") and is_on_floor() and !isDashing:
 		velocity.y = JUMP_VELOCITY
-
+	
+	# Handle dash.
+	if Input.is_action_just_pressed("dash") and dash_cooldown >= dash_cooldown_max and not isDashing:
+		isDashing = true
+		dash_cooldown = 0
+		dash_time = 0
+		velocity.y = 0
+	
+	if !isDashing and dash_cooldown < dash_cooldown_max:
+		dash_cooldown += delta
+	
+	if isDashing:
+		var translation = dash_dist * delta
+		if $AnimatedSprite2D.flip_h: translation *= -1
+		position.x += translation
+		dash_time += delta
+		if dash_time >= dash_time_max:
+			isDashing = false
+	
 	# Handles respawn/ restart
 	if Input.is_action_just_pressed("restart"):
 		velocity = Vector2(0, 0)
