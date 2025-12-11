@@ -21,7 +21,12 @@ var game_paused = false
 var animation_finished = null
 func _ready() -> void:
 	randomize()
-	queue_free()
+	var timer = Timer.new()
+	add_child(timer)
+	timer.wait_time = 2.0
+	timer.timeout.connect(print_debug_info)
+	timer.start()
+	#queue_free()
 
 func flip(direction):
 	if direction.x < 0:
@@ -30,16 +35,12 @@ func flip(direction):
 		return false
 
 func _physics_process(delta: float) -> void:
-	#queue_free()
-	navigation_agent.target_position = player.position
+	#navigation_agent.target_position = player.position
 	var next_path_position = navigation_agent.get_next_path_position()
 	var direction := global_position.direction_to(next_path_position)
 	
-	
 	move_and_slide()
-	print(direction, velocity.y, ", ", HEALTH)
 	
-
 	velocity.x = (direction.x * SPEED)
 	velocity += get_gravity() * delta
 	anim.pause()
@@ -55,10 +56,12 @@ func _physics_process(delta: float) -> void:
 		
 	if HEALTH <= 0:
 		anim.play("Death")
-		navigation_agent.target_position = position
+		queue_free()
 	
 	if Input.is_action_just_pressed("restart"):
 		velocity = Vector2(0, 0)
 		scripts.restart()
 		
 	if Input.is_action_just_pressed("quit"): get_tree().quit()
+func print_debug_info():
+	print(velocity.y, ", ", HEALTH)
