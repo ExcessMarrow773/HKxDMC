@@ -23,5 +23,6 @@ func _on_timer_timeout():
 
 func _on_body_entered(body: Node2D) -> void:
 	print(body)
-	if body == Enemy:
+	if body.name == "Enemy":
 		body.HEALTH -= damage
+		print("did damage")
