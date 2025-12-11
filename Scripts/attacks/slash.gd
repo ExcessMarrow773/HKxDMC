@@ -22,7 +22,7 @@ func _on_timer_timeout():
 	queue_free()
 
 func _on_body_entered(body: Node2D) -> void:
-	print(body)
+	#print(body)
 	if body.name == "Enemy":
 		body.HEALTH -= damage
 		print("did damage")

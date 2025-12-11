@@ -69,9 +69,12 @@ func _physics_process(delta: float) -> void:
 		velocity = Vector2(0, 0)
 		death('respawn')
 		
-	if Input.is_action_just_pressed("custom"):
+	if Input.is_action_just_pressed("attack"):
 		var atk = slash_attack.instantiate()
 		add_child(atk)
+		print(atk.get_tree_string())
+		
+		
 	# Get the input direction and handle the movement/deceleration.
 	if direction and not game_paused: # Adjust the threshold (0.1) as needed:
 		$AnimatedSprite2D.flip_h = flip(direction)
