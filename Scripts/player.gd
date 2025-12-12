@@ -23,6 +23,7 @@ var dash_time = 0
 var dash_cooldown_max = 0.4
 var dash_cooldown = 0.0
 
+
 func _ready() -> void:
 	pass
 
@@ -33,6 +34,7 @@ func flip(direction):
 func _physics_process(delta: float) -> void:
 	var did_move = (lastX == position.x) and (lastY == position.y)
 	var direction := Input.get_axis("left", "right")
+	
 	if isDashing: direction = 0.0
 	# Add the gravity.
 	if not is_on_floor() and not game_paused and not isDashing:
@@ -55,9 +57,12 @@ func _physics_process(delta: float) -> void:
 	
 	if isDashing:
 		var translation = dash_dist * delta
+		
 		if $AnimatedSprite2D.flip_h: translation *= -1
+		
 		position.x += translation
 		dash_time += delta
+		
 		if dash_time >= dash_time_max:
 			isDashing = false
 	
@@ -76,6 +81,9 @@ func _physics_process(delta: float) -> void:
 		atk.scale.x = 1
 		if $AnimatedSprite2D.flip_h: atk.scale.x = -1
 		
+		if Input.is_action_pressed("down") and !is_on_floor():
+			atk.scale.x = 1
+			atk.rotation = PI*.5
 		
 		
 	# Get the input direction and handle the movement/deceleration.
@@ -118,6 +126,7 @@ func death(death_message):
 		
 		game_paused = true
 		await get_tree().create_timer(1.25).timeout
+		
 	get_tree().reload_current_scene()
 
 func _on_death_plane_body_entered(_body: CharacterBody2D) -> void:
