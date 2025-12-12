@@ -73,6 +73,9 @@ func _physics_process(delta: float) -> void:
 		var atk = slash_attack.instantiate()
 		add_child(atk)
 		print(atk.get_tree_string())
+		atk.scale.x = 1
+		if $AnimatedSprite2D.flip_h: atk.scale.x = -1
+		
 		
 		
 	# Get the input direction and handle the movement/deceleration.
