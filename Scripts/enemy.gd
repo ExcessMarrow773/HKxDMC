@@ -49,7 +49,9 @@ func _physics_process(delta: float) -> void:
 	
 	if direction.y < -0.5 and is_on_floor():
 		velocity.y = JUMP_VELOCITY
-		
+	
+	$Label.text = str(HEALTH)
+	
 	if velocity.x == 0.0:
 		anim.pause()
 		anim.play("Idle")
