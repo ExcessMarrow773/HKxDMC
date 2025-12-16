@@ -1,7 +1,7 @@
 class_name attack_slash extends Area2D
 
 var damage = 5
-@export var didDamage = false
+@export var doPogo = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -26,10 +26,9 @@ func _on_body_entered(body: Node2D) -> void:
 	#print(body)
 	if body.name == "Enemy":
 		body.HEALTH -= damage
-		didDamage = true
 		print("did damage")
-		if ()
-		$"..".velocity.y = $"..".JUMP_VELOCITY
+		if doPogo:
+			$"..".velocity.y = $"..".JUMP_VELOCITY
 
 # func check_for_hit() -> bool:
 # 	return didDamage
