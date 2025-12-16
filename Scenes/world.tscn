@@ -21,6 +21,7 @@ rotation = 0.00057036255
 script = ExtResource("1_fo5ed")
 
 [node name="Player" parent="." instance=ExtResource("1_go701")]
+unique_name_in_owner = true
 texture_repeat = 2
 position = Vector2(192.00012, -103.8905)
 slide_on_ceiling = false

@@ -4,6 +4,7 @@
 
 [node name="Area2D" type="Area2D"]
 script = ExtResource("1_rov7c")
+didDamage = null
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 position = Vector2(0, 24)

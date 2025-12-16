@@ -83,7 +83,7 @@ func _physics_process(delta: float) -> void:
 		
 		if Input.is_action_pressed("down") and !is_on_floor():
 			atk.scale.x = 1
-			atk.rotation = PI*.5
+			atk.rotation = PI*0.5
 		
 		
 	# Get the input direction and handle the movement/deceleration.
