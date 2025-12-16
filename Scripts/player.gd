@@ -15,6 +15,7 @@ var lastX = 0
 var lastY = 0
 var game_paused = false
 var animation_finished = null
+
 var isDashing := false
 var canDash := false
 var dash_dist = 450
@@ -23,6 +24,9 @@ var dash_time = 0
 var dash_cooldown_max = 0.4
 var dash_cooldown = 0.0
 
+var canAtk := true
+var atk_cooldown_max = 0.4
+var atk_cooldown = 0.0
 
 func _ready() -> void:
 	pass
@@ -51,9 +55,16 @@ func _physics_process(delta: float) -> void:
 		dash_time = 0
 		velocity.y = 0
 		canDash = false
+		
+	if Input.is_action_just_pressed("attack") and atk_cooldown >= atk_cooldown_max:
+		atk_cooldown = 0
+		canAtk = true
 	
 	if !isDashing and dash_cooldown < dash_cooldown_max:
 		dash_cooldown += delta
+		
+	if !canAtk and atk_cooldown < atk_cooldown_max:
+		atk_cooldown += delta
 	
 	if isDashing:
 		var translation = dash_dist * delta
@@ -75,16 +86,20 @@ func _physics_process(delta: float) -> void:
 		death('respawn')
 		
 	if Input.is_action_just_pressed("attack"):
-		var atk = slash_attack.instantiate()
-		add_child(atk)
-		print(atk.get_tree_string())
-		atk.scale.x = 1
-		if $AnimatedSprite2D.flip_h: atk.scale.x = -1
-		
-		if Input.is_action_pressed("down") and !is_on_floor():
+		if canAtk:
+			canAtk = false
+			atk_cooldown = 0
+			var atk = slash_attack.instantiate()
+			add_child(atk)
+			print(atk.get_tree_string())
 			atk.scale.x = 1
-			atk.rotation = PI*0.5
-			atk.doPogo = true
+			if $AnimatedSprite2D.flip_h: atk.scale.x = -1
+			
+			if Input.is_action_pressed("down") and !is_on_floor():
+				atk.scale.x = 1
+				atk.rotation = PI*0.5
+				atk.doPogo = true
+		
 		
 		
 	# Get the input direction and handle the movement/deceleration.
