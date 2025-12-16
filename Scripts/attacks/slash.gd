@@ -28,7 +28,8 @@ func _on_body_entered(body: Node2D) -> void:
 		body.HEALTH -= damage
 		didDamage = true
 		print("did damage")
-		%Player.velocity.y = %Player.JUMP_VELOCITY
+		if ()
+		$"..".velocity.y = $"..".JUMP_VELOCITY
 
 # func check_for_hit() -> bool:
 # 	return didDamage
